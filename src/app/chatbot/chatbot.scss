@@ -1,0 +1,314 @@
+.chatbot-container {
+    height: 100vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  
+    .sidenav-container {
+      height: 100%;
+      background: transparent;
+    }
+  
+    .sidebar {
+      width: 320px;
+      background: white;
+      border-right: 1px solid #e0e0e0;
+  
+      .sidebar-header {
+        background: linear-gradient(135deg, #2196F3, #21CBF3);
+        color: white;
+      }
+  
+      .session-list {
+        padding: 0;
+        height: calc(100% - 128px);
+        overflow-y: auto;
+  
+        .session-item {
+          border-bottom: 1px solid #f5f5f5;
+          cursor: pointer;
+          transition: background-color 0.2s;
+  
+          &:hover {
+            background-color: #f5f5f5;
+          }
+  
+          &.active {
+            background-color: #e3f2fd;
+            border-left: 4px solid #2196F3;
+          }
+  
+          .session-title {
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+  
+            .unread-indicator {
+              font-size: 8px;
+              color: #f44336;
+              margin-left: 8px;
+            }
+          }
+  
+          .session-preview {
+            font-size: 12px;
+            color: #666;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+  
+          .session-time {
+            font-size: 11px;
+            color: #999;
+          }
+        }
+      }
+  
+      .sidebar-actions {
+        padding: 16px;
+        border-top: 1px solid #e0e0e0;
+  
+        .new-chat-btn {
+          width: 100%;
+        }
+      }
+    }
+  
+    .main-content {
+      background: white;
+      margin: 16px;
+      border-radius: 12px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+  
+      .chat-header {
+        background: linear-gradient(135deg, #2196F3, #21CBF3);
+        color: white;
+        border-radius: 12px 12px 0 0;
+  
+        .chat-title {
+          font-weight: 500;
+          font-size: 18px;
+        }
+      }
+  
+      .messages-container {
+        height: calc(100vh - 200px);
+        padding: 20px;
+        overflow-y: auto;
+        background: #fafafa;
+  
+        .message {
+          display: flex;
+          margin-bottom: 16px;
+  
+          &.user {
+            justify-content: flex-end;
+  
+            .message-bubble {
+              background: linear-gradient(135deg, #2196F3, #21CBF3);
+              color: white;
+              border-bottom-right-radius: 4px;
+            }
+          }
+  
+          &.bot {
+            justify-content: flex-start;
+  
+            .message-bubble {
+              background: white;
+              color: #333;
+              border-bottom-left-radius: 4px;
+              box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            }
+          }
+  
+          .message-bubble {
+            max-width: 70%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            position: relative;
+  
+            .message-content {
+              line-height: 1.4;
+              white-space: pre-wrap;
+            }
+  
+            .quick-replies {
+              margin-top: 8px;
+              display: flex;
+              flex-wrap: wrap;
+              gap: 8px;
+  
+              .quick-reply-chip {
+                cursor: pointer;
+                background: #e3f2fd;
+                color: #1976d2;
+                transition: all 0.2s;
+  
+                &:hover {
+                  background: #bbdefb;
+                  transform: translateY(-1px);
+                }
+              }
+            }
+  
+            .message-time {
+              font-size: 11px;
+              opacity: 0.7;
+              margin-top: 4px;
+              text-align: right;
+            }
+          }
+        }
+      }
+  
+      .input-container {
+        padding: 20px;
+        background: white;
+        border-top: 1px solid #e0e0e0;
+        display: flex;
+        align-items: flex-end;
+        gap: 12px;
+  
+        .message-input {
+          flex: 1;
+  
+          ::ng-deep .mat-mdc-form-field-subscript-wrapper {
+            display: none;
+          }
+        }
+  
+        .send-button {
+          margin-bottom: 8px;
+          transition: transform 0.2s;
+  
+          &:hover:not(:disabled) {
+            transform: scale(1.05);
+          }
+        }
+      }
+    }
+  }
+  
+  // Scrollbar styling
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+  }
+  
+  // Responsive design
+  @media (max-width: 768px) {
+    .chatbot-container {
+      .sidebar {
+        width: 280px;
+      }
+  
+      .main-content {
+        margin: 8px;
+  
+        .messages-container {
+          .message {
+            .message-bubble {
+              max-width: 85%;
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  .spacer {
+    flex: 1 1 auto;
+  }
+  // Add these specific fixes to your existing CSS
+.main-content {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 32px);
+  
+    .messages-container {
+      flex: 1;
+      overflow-y: auto;
+      min-height: 0; // Crucial for flexbox scrolling
+    }
+  
+    .input-container {
+      flex-shrink: 0; // Prevent input area from shrinking
+      
+      .message-input {
+        ::ng-deep .mat-mdc-form-field-flex {
+          align-items: flex-end;
+        }
+        
+        ::ng-deep .mat-mdc-form-field-infix {
+          min-height: auto;
+          padding-top: 8px;
+          padding-bottom: 8px;
+        }
+        
+        ::ng-deep textarea.mat-mdc-input-element {
+          min-height: 50px;
+          max-height: 80px;
+          resize: vertical;
+        }
+      }
+    }
+  }
+
+  // Add to your existing SCSS file
+
+.loading-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 0;
+    
+    .loading-text {
+      font-size: 14px;
+      color: #666;
+      font-style: italic;
+    }
+    
+    ::ng-deep .mat-mdc-progress-spinner {
+      width: 20px !important;
+      height: 20px !important;
+      
+      ::ng-deep circle {
+        stroke: #666;
+      }
+    }
+  }
+  
+  // Update message bubble for loading state
+  .message-bubble {
+    .loading-container + .message-time {
+      margin-top: 8px;
+    }
+  }
+  
+  // Disabled state for input
+  .input-container {
+    .message-input {
+      ::ng-deep .mat-mdc-form-field-disabled {
+        opacity: 0.6;
+      }
+    }
+    
+    .send-button:disabled {
+      opacity: 0.6;
+    }
+  }

@@ -1,0 +1,139 @@
+<div class="chatbot-container">
+    <!-- Sidebar -->
+    <mat-sidenav-container class="sidenav-container">
+      <mat-sidenav 
+        #sidenav
+        [mode]="'side'" 
+        [opened]="isSidebarOpen()"
+        class="sidebar"
+        fixedInViewport>
+        
+        <mat-toolbar color="primary" class="sidebar-header">
+          <span>Chat Sessions</span>
+          <span class="spacer"></span>
+          <button 
+            mat-icon-button 
+            [matBadge]="unreadCount()" 
+            matBadgeColor="warn"
+            matTooltip="Unread messages">
+            <mat-icon>chat</mat-icon>
+          </button>
+        </mat-toolbar>
+  
+        <mat-nav-list class="session-list">
+          <mat-list-item 
+            *ngFor="let session of chatSessions()"
+            [class.active]="session.id === selectedSession()"
+            (click)="selectSession(session.id)"
+            class="session-item">
+            
+            <mat-icon matListIcon>chat_bubble</mat-icon>
+            
+            <div matLine class="session-title">
+              {{ session.title }}
+              <mat-icon *ngIf="session.unread" class="unread-indicator">fiber_manual_record</mat-icon>
+            </div>
+            
+            <div matLine class="session-preview">
+              {{ session.lastMessage }}
+            </div>
+            
+            <div matLine class="session-time">
+              {{ session.timestamp | date:'shortTime' }}
+            </div>
+          </mat-list-item>
+        </mat-nav-list>
+  
+        <div class="sidebar-actions">
+          <button mat-raised-button color="primary" class="new-chat-btn" (click)="clearChat()">
+            <mat-icon>add</mat-icon>
+            New Chat
+          </button>
+        </div>
+      </mat-sidenav>
+  
+      <!-- Main Content -->
+      <mat-sidenav-content class="main-content">
+        <mat-toolbar color="primary" class="chat-header">
+          <button mat-icon-button (click)="toggleSidebar()">
+            <mat-icon>menu</mat-icon>
+          </button>
+          
+          <span class="chat-title">AI Assistant</span>
+          
+          <span class="spacer"></span>
+          
+          <button mat-icon-button matTooltip="Clear chat" (click)="clearChat()">
+            <mat-icon>delete</mat-icon>
+          </button>
+          
+          <button mat-icon-button matTooltip="Settings">
+            <mat-icon>settings</mat-icon>
+          </button>
+        </mat-toolbar>
+  
+        <!-- Messages Container -->
+        <div #messageContainer class="messages-container">
+          <div 
+            *ngFor="let message of currentSessionMessages()" 
+            [class]="'message ' + message.sender">
+            
+            <div class="message-bubble">
+              <!-- Loading State -->
+              <div *ngIf="message.isLoading" class="loading-container">
+                <mat-spinner diameter="20"></mat-spinner>
+                <span class="loading-text">AI is thinking...</span>
+              </div>
+  
+              <!-- Normal Message -->
+              <div *ngIf="!message.isLoading" class="message-content">
+                {{ message.content }}
+              </div>
+              
+              <!-- Quick Replies -->
+              <div *ngIf="message.quickReplies && message.sender === 'bot' && !message.isLoading" class="quick-replies">
+                <mat-chip 
+                  *ngFor="let reply of message.quickReplies"
+                  (click)="sendQuickReply(reply)"
+                  class="quick-reply-chip">
+                  {{ reply }}
+                </mat-chip>
+              </div>
+              
+              <!-- Message Time -->
+              <div *ngIf="!message.isLoading" class="message-time">
+                {{ message.timestamp | date:'shortTime' }}
+              </div>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Input Area -->
+        <div class="input-container">
+          <mat-form-field appearance="outline" class="message-input" style="width: 100%;">
+            <mat-label>Type your message...</mat-label>
+            <textarea 
+              matInput 
+              [(ngModel)]="newMessage"
+              (keydown)="onKeyPress($event)"
+              cdkTextareaAutosize
+              cdkAutosizeMinRows="1"
+              cdkAutosizeMaxRows="4"
+              placeholder="Type your message here..."
+              [disabled]="isSending()">
+            </textarea>
+          </mat-form-field>
+          
+          <button 
+            mat-fab 
+            color="primary" 
+            (click)="sendMessage()"
+            [disabled]="!newMessage.trim() || isSending()"
+            class="send-button">
+            <mat-icon *ngIf="!isSending()">send</mat-icon>
+            <mat-spinner *ngIf="isSending()" diameter="20"></mat-spinner>
+          </button>
+        </div>
+      </mat-sidenav-content>
+    </mat-sidenav-container>
+  </div>
